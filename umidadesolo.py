@@ -21,3 +21,4 @@ GPIO.add_event_callback(channel, callback)
  
 # Loop infinito para manter o script rodando
 while True:
+  time.sleep(0.1)
