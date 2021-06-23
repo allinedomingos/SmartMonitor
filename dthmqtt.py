@@ -1,5 +1,6 @@
 import json
 import confMqtt
+import Adafruit_DHT
 
 BROKER_IP = 'localhost'
 BROKER_PORT = 1883
