@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+
+  nodered:
+    depends_on:
+      - mosquitto
+    container_name: nodered  
+    image: nodered/node-red:latest
+    ports:
+      - "1880:1880"
+    restart: always
+    volumes:
+      - ~/volumes/docker/nodered/node_red_data:/data
+
+  mosquitto:
+    container_name: mqtt
+    image: eclipse-mosquitto
+    volumes:
+      - ~/volume/docker/mqtt/data:/mosquitto/data
+      - ~/volume/docker/mqtt/log:/mosquitto/log
+      - ~/volume/docker/mqtt/config:/mosquitto/config
+    restart: always
+
+  
+  influxdb:
+    container_name: influxdb
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+    volumes:
+      - /home/allinedomingos/influxdb_data:/influxdb
+    environment:
+      - INFLUXDB_DB=db
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    restart: always
+      
+  grafana:
+    depends_on:
+      - influxdb
+    container_name: grafana  
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ~/volumes/docker/grafana/grafana_data:/grafana 
