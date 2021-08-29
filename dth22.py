@@ -1,31 +1,35 @@
-def main():
+from machine import Pin
+from time import sleep
+import dht 
+import confMqtt
 
-    #Limpa
-    GPIO.setwarnings(False)
-    GPIO.cleanup()
+sensor = dht.DHT22(Pin(14))
 
-    # Objeto sensor
-    sensor = Adafruit_DHT.DHT22
-    GPIO.setmode(GPIO.BOARD)
+BROKER_IP = 'xxxxxxxxxxxx'
+BROKER_PORT = 1883
+CLIENT_NAME = 'Test'
+BROKER_USER='xxxxxxxxxxxxxx'
+BROKER_PASS='xxxxxxxxxxxxxxxxxxx'
+TOPIC = 'test/dht22'
+
+data = {'temperature': 0, 'humidity': 0}
+humidity = 0;
+temperature = 0;
+
+client = confMqtt.createClient(CLIENT_NAME, BROKER_IP, BROKER_PORT, BROKER_USER, BROKER_PASS)
+
+while True:
+  try:
+    if humidity is not None and temperature is not None:
+      sensor.measure()
+      temperature = sensor.temperature()
+      humidity = sensor.humidity()
+      print(u"Temperatura: {:g}\u00b0C, Umidade: {:g}%".format(temperature, humidity))
+      data['temperature'] = temperature
+      data['humidity'] = humidity
+      confMqtt.connectBroker(client)
+      confMqtt.sendPackage(client, TOPIC, data)
+  except OSError as e:
+      print('Erro ao tentar ler dados do sensor.')
 
 
-    # Define a GPIO (pino de leitura de dado)
-    pino_sensor = 22
-
-    while True:
-      #  Le do sensor
-	umid, temp = Adafruit_DHT.read_retry(sensor, pino_sensor);
-
-	# Se ok, mostra os valores na tela
-	 if umid is not None and temp is not None :
-	  print ("Temp = {0:0.1f}  Umidade = {1:0.1f}").format(temp, umid);
-	  envia_info(temp,umid)
-	  print ("Dados enviados\n")
-	 else:
-	# Caso erro 
-	  print ("Falha ao ler dados do sensor !!!");
-	 time.sleep(240)
-
-if __name__ == '__main__':
-
-   main()
