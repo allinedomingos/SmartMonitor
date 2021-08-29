@@ -21,15 +21,14 @@ confMqtt.on_connect=confMqtt.on_connect
 confMqtt.connect(client,BROKER_USER,BROKER_PASS,BROKER_IP)
 
 humidity, temperature = Adafruit_DHT.read_retry(SENSOR_LIB, PINO_CONF)
-    if humidity is not None and temperature is not None:
-       humidity= round(humidity,2)
-       temperature = round(temperature,2)
-       print(u"Temperature: {:g}\u00b0C, Humidity: {:g}%".format(temperature, humidity))
-       data['temperature'] = temperature
-       data['humidity'] = humidity
-       package = json.dumps(data)
-       confMqtt.send(client,package,TOPIC)
-       print("Send..."+ package)
-    else:
-        print("Failed to retrieve data from humidity sensor")
-   
+if humidity is not None and temperature is not None:
+    humidity= round(humidity,2)
+    temperature = round(temperature,2)
+    print(u"Temperature: {:g}\u00b0C, Humidity: {:g}%".format(temperature, humidity))
+    data['temperature'] = temperature
+    data['humidity'] = humidity
+    package = json.dumps(data)
+    confMqtt.send(client,package,TOPIC)
+    print("Send..."+ package)
+else:
+    print("Failed to retrieve data from humidity sensor")
