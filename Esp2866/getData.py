@@ -70,11 +70,10 @@ def getTemp(pinout_temp):
   ds_pin = machine.Pin(pinout_temp)
   ds_sensor = ds18x20.DS18X20(onewire.OneWire(ds_pin))
   roms = ds_sensor.scan()
-  #print('Found DS devices: ', roms)
-  #Loops every 5 seconds forever
+
   try:
     ds_sensor.convert_temp()
-    #It's important to wait so the conversion can take place
+   
     time.sleep_ms(750)
     for rom in roms:
       data['temperature'] = ds_sensor.read_temp(rom)
