@@ -10,3 +10,8 @@ Telecommunications Engineering - IFSC/SJ
 * Language: Micropython
 
 
+# For docker
+After installing [docker](https://docs.docker.com/get-docker/) you must create a folder called volumes and inside it the folders node red data, influxdb and grafana. Then run the command below in the terminal to upload the containers.
+
+* `docker-compose up -d`
+
